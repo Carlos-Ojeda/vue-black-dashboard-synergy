@@ -51,6 +51,9 @@ export let blueChartOptions = {
 
 export let purpleChartOptions = {
   ...basicOptions,
+  legend: {
+    display: true
+  },
   tooltips: {
     backgroundColor: '#f5f5f5',
     titleFontColor: '#333',
@@ -88,6 +91,29 @@ export let purpleChartOptions = {
         padding: 20,
         fontColor: "#9a9a9a"
       }
+    }]
+  }
+}
+export let purpleChartOptions2 = {
+  legend: {
+    display: true
+  },
+  maintainAspectRatio: false,
+  legend: {
+    display: true
+  },
+  responsive: true,  
+  scales: {
+    xAxes: [{
+      type:"time",
+      time: {
+        unit: "minute"
+      },
+      gridLines: {
+        drawBorder: false,
+        color: 'rgba(225,78,202,0.1)',
+        zeroLineColor: "transparent",
+      },
     }]
   }
 }
@@ -190,6 +216,9 @@ export let barChartOptions = {
     intersect: 0,
     position: "nearest"
   },
+  legend: {
+    display: true
+  },
   scales: {
     yAxes: [{
 
@@ -199,8 +228,8 @@ export let barChartOptions = {
         zeroLineColor: "transparent",
       },
       ticks: {
-        suggestedMin: 60,
-        suggestedMax: 120,
+        suggestedMin: 0,
+        suggestedMax: 10,
         padding: 20,
         fontColor: "#9e9e9e"
       }
