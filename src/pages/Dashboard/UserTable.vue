@@ -16,7 +16,7 @@
     },
     data() {
       return {
-        countries: [{qr:0}]
+        countries: []
       }
     },
     computed: {

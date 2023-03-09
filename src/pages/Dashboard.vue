@@ -11,34 +11,11 @@
                 <h2 class="card-title">Personas</h2>
               </div>
               <div class="col-sm-6">
-                <div class="btn-group btn-group-toggle"
-                    :class="isRTL ? 'float-left' : 'float-right'"
-                    data-toggle="buttons">
-                  <label v-for="(option, index) in bigLineChartCategories"
-                        :key="option"
-                        class="btn btn-sm btn-primary btn-simple"
-                        :class="{active: bigLineChart.activeIndex === index}"
-                        :id="index">
-                    <input type="radio"
-                          @click="initBigChart(index)"
-                          name="options" autocomplete="off"
-                          :checked="bigLineChart.activeIndex === index">
-                    {{option}}
-                  </label>
-                </div>
               </div>
             </div>
           </template>
-          <div class="chart-area">
-            <line-chart style="height: 220px"
-                        ref="bigChart"
-                        chart-id="big-line-chart"
-                        :chart-data="bigLineChart.chartData"
-                        :gradient-colors="bigLineChart.gradientColors"
-                        :extra-options="bigLineChart.extraOptions"
-                        >
-            </line-chart>
-          </div>
+          <bigline :data-synergy-compra="dataSynergyCompra" :data-synergy="dataSynergy"></bigline>
+          {{ dataSynergy }}
         </card>
       </div>
     </div>
@@ -49,15 +26,9 @@
             <h5 class="card-category">Scans Totales</h5>
             <h3 class="card-title"><i class="tim-icons icon-camera-18 text-primary "></i> 259</h3>
           </template>
-          <div class="chart-area">
-            <line-chart style="height: 100%"
-                        chart-id="purple-line-chart"
-                        :chart-data="purpleLineChart.chartData"
-                        :gradient-colors="purpleLineChart.gradientColors"
-                        :gradient-stops="purpleLineChart.gradientStops"
-                        :extra-options="purpleLineChart.extraOptions">
-            </line-chart>
-          </div>
+          
+            <scans></scans>
+          
         </card>
       </div>
       <div class="col-lg-4" :class="{'text-right': isRTL}">
@@ -69,7 +40,7 @@
           <barch :data-synergy="dataSynergyCompra"></barch>
         </card>
       </div>
-      <div class="col-lg-4" :class="{'text-right': isRTL}">
+      <!--<div class="col-lg-4" :class="{'text-right': isRTL}">
         <card type="chart">
           <template slot="header">
             <h5 class="card-category">{{$t('dashboard.completedTasks')}}</h5>
@@ -84,10 +55,18 @@
             </line-chart>
           </div>
         </card>
+      </div>-->
+      <div class="col-lg-4" >
+        <card class="card" :header-classes="{'text-right': isRTL}">
+          <h4 slot="header" class="card-title">QR escaneados</h4>
+          <div class="table-responsive" >
+            <user-table></user-table>
+          </div>
+        </card>
       </div>
     </div>
     <div class="row">
-      <div class="col-lg-6 col-md-12">
+      <!--<div class="col-lg-6 col-md-12">
         <card type="tasks" :header-classes="{'text-right': isRTL}">
           <template slot="header">
             <h6 class="title d-inline">{{$t('dashboard.tasks', {count: 5})}}</h6>
@@ -107,15 +86,15 @@
             <task-list></task-list>
           </div>
         </card>
-      </div>
-      <div class="col-lg-6 col-md-12">
+      </div>-->
+      <!--<div class="col-lg-6 col-md-12">
         <card class="card" :header-classes="{'text-right': isRTL}">
           <h4 slot="header" class="card-title">QR escaneados</h4>
           <div class="table-responsive">
             <user-table></user-table>
           </div>
         </card>
-      </div>
+      </div>-->
     </div>
   </div>
 </template>
@@ -127,64 +106,24 @@
   import UserTable from './Dashboard/UserTable';
   import config from '@/config';
   import barch from './Dashboard/barch.vue';
+  import bigline from './Dashboard/bigline.vue';
+  import db from '../firebase/init.js'
+  import { query, collection, getDocs, limit, orderBy } from "firebase/firestore"
+  import scans from './Dashboard/scans.vue';
   export default {
     components: {
       LineChart,
       BarChart,
       TaskList,
       UserTable,
-      barch
+      barch,
+      bigline,
+      scans
     },
     data() {
       return {
-        dataSynergyCompra:[ 
-            { "os": 1, "city": 6, "country": "Mexico", "timestamp": 1678075066, "ip": "200.36.251.35", "qr": 2 }, 
-            { "qr": 1, "city": 15, "os": 1, "ip": "200.36.251.158", "timestamp": 1678024092, "country": "Mexico" }, 
-            { "ip": "200.36.251.247", "qr": 0, "timestamp": 1677911336, "country": "Mexico", "city": 17, "os": 1 }, 
-            { "qr": 1, "os": 0, "city": 5, "ip": "200.36.251.56", "country": "Mexico", "timestamp": 1678234956 }, 
-            { "timestamp": 1678229859, "os": 0, "qr": 0, "ip": "200.36.251.128", "city": 18, "country": "Mexico" } 
-          ],
-        bigLineChart: {
-          extraOptions: chartConfigs.purpleChartOptions2,
-          chartData: {
-            
-            datasets: [{
-              label: "Ventas",
-              fill: true,
-              borderColor: config.colors.primary,
-              borderWidth: 2,
-              borderDash: [],
-              borderDashOffset: 0.0,
-              pointBackgroundColor: config.colors.primary,
-              pointBorderColor: 'rgba(255,255,255,0)',
-              pointHoverBackgroundColor: config.colors.primary,
-              pointBorderWidth: 20,
-              pointHoverRadius: 4,
-              pointHoverBorderWidth: 15,
-              pointRadius: 4,
-              data: [{x:1678229856000,y:1}, {x:1678229859000, y:2}, {x:1678229879000,y:3}, {x:1678229889000,y:4}, {x:1678229899000,y:5}, {x:1678229909000,y:1}],
-            },
-            {
-              label: "personas",
-              fill: true,
-              borderColor: config.colors.info,
-              borderWidth: 2,
-              borderDash: [],
-              borderDashOffset: 0.0,
-              pointBackgroundColor: config.colors.info,
-              pointBorderColor: 'rgba(255,255,255,0)',
-              pointHoverBackgroundColor: config.colors.info,
-              pointBorderWidth: 20,
-              pointHoverRadius: 4,
-              pointHoverBorderWidth: 15,
-              pointRadius: 4,
-              data: [{x:1678229856100,y:2}, {x:1678229859200, y:4}, {x:1678229879300,y:6}, {x:1678229889100,y:1}, {x:1678229899000,y:2}, {x:1678229909500,y:7}],
-            }
-          ]
-          },
-          gradientColors: config.colors.primaryGradient,
-          gradientStops: [1, 0.2, 0],
-        },
+          dataSynergy:[],
+          dataSynergyCompra:[],
         purpleLineChart: {
           extraOptions: chartConfigs.purpleChartOptions2,
           chartData: {
@@ -274,42 +213,34 @@
         return this.$t('dashboard.chartCategories');
       }
     },
-    methods: {
-      initBigChart(index) {
-        let chartData = {
-          
-          datasets: [{
-            
-            fill: true,
-            borderColor: config.colors.primary,
-            borderWidth: 2,
-            borderDash: [],
-            borderDashOffset: 0.0,
-            pointBackgroundColor: config.colors.primary,
-            pointBorderColor: 'rgba(255,255,255,0)',
-            pointHoverBackgroundColor: config.colors.primary,
-            data: this.bigLineChart.allData[index]
-          },
-          
-        ],
-        }
-        this.$refs.bigChart.updateGradients(chartData);
-        this.bigLineChart.chartData = chartData;
-        this.bigLineChart.activeIndex = index;
-      }
-    },
     mounted() {
       this.i18n = this.$i18n;
       if (this.enableRTL) {
         this.i18n.locale = 'ar';
         this.$rtl.enableRTL();
       }
-      this.initBigChart(0);
     },
     beforeDestroy() {
       if (this.$rtl.isRTL) {
         this.i18n.locale = 'en';
         this.$rtl.disableRTL();
+      }
+    },
+    created() {
+      this.getData()
+    },
+    methods: {
+      async getData() {
+        // quitar comentarios ya quedo
+        /*let data = [];
+        const querySnap = await getDocs(query(collection(db, 'compra'),orderBy('timestamp', "desc") ,limit(10)));
+        // add each doc to 'countries' array
+        querySnap.forEach((doc) => {
+          data.push(doc.data())
+        })
+        this.dataSynergy = data
+        this.online = true;
+        /**/
       }
     }
   };

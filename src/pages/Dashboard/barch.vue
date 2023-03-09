@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="chart-area">
+    <div v-if="online" class="chart-area">
       <bar-chart style="height: 100%"
                 chart-id="blue-bar-chart"
                 :chart-data="blueBarChart2.chartData"
@@ -15,12 +15,14 @@
   import BarChart from '@/components/Charts/BarChart';
   import * as chartConfigs from '@/components/Charts/config';
   import config from '@/config';
+  import db from '@/firebase/init.js'
+  import { query, collection, getDocs, limit, orderBy } from "firebase/firestore"
   export default {
     components: {
       BarChart
     },
     props:{
-      dataSynergy: Array
+      
     },  
     data() {
       return {
@@ -51,7 +53,9 @@
           },
           gradientColors: config.colors.primaryGradient,
           gradientStops: [1, 0.4, 0],
-        }
+        },
+        dataSynergy: [],
+        online: false
       }
     },
     computed: {
@@ -106,19 +110,23 @@
       }
     },
     created() {
-      
+          this.getData()
+
     },
     methods: {
-    async getData() {
-      // quitar comentarios ya quedo
-      /*const querySnap = await getDocs(query(collection(db, 'ARQR'),limit(5)));
-      // add each doc to 'countries' array
-      querySnap.forEach((doc) => {
-        console.log(doc.data)
-        this.countries.push(doc.data())
-      })/* */
+      async getData() {
+        // quitar comentarios ya quedo
+        /*let data = [];
+        const querySnap = await getDocs(query(collection(db, 'compra'),orderBy('timestamp', "desc") ,limit(10)));
+        // add each doc to 'countries' array
+        querySnap.forEach((doc) => {
+          data.push(doc.data())
+        })
+        this.dataSynergy = data
+        this.online = true;
+        /**/
+      }
     }
-  }
   }
 </script>
 <style>
