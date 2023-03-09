@@ -97,7 +97,7 @@
     methods: {
       async getData() {
         // quitar comentarios ya quedo
-        /*let data = [];
+        let data = [];
         const querySnap = await getDocs(query(collection(db, 'ARQR'),orderBy('timestamp') ,limit(10)));
         // add each doc to 'countries' array
         querySnap.forEach((doc) => {

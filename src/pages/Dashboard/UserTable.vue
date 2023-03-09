@@ -28,7 +28,7 @@
     methods: {
     async getData() {
       // quitar comentarios ya quedo
-      /*const querySnap = await getDocs(query(collection(db, 'ARQR'),limit(5)));
+      const querySnap = await getDocs(query(collection(db, 'ARQR'),limit(5)));
       // add each doc to 'countries' array
       querySnap.forEach((doc) => {
         console.log(doc.data)
